@@ -28,10 +28,9 @@ jobs:
         with:
           python-version: "3.14"
 
-      # The schema is pinned by vendoring `schema/card-set.schema.json` (a copy of the meta repo's
-      # `schema-v1`), so unrelated changes on the schema's `main` never break this job.
+      # Validate against the canonical schema in the meta repo — the single source of truth.
       - name: Validate every set against the schema
-        run: uvx check-jsonschema --schemafile schema/card-set.schema.json sets/*.json
+        run: uvx check-jsonschema --schemafile https://raw.githubusercontent.com/letsbuilda/mundane/main/schemas/card-set.schema.json sets/*.json
 
       - name: Check composed-id uniqueness across sets
         run: python scripts/check_unique_ids.py

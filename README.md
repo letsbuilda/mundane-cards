@@ -47,8 +47,8 @@ other fields are allowed, so a typo like `txet` fails CI loudly.
 The full, normative format is documented in the meta repo:
 [specs/card-sets.md](https://github.com/letsbuilda/mundane/blob/main/specs/card-sets.md), and the
 machine-checkable contract is
-[schemas/card-set.schema.json](https://github.com/letsbuilda/mundane/blob/main/schemas/card-set.schema.json)
-(a pinned copy is vendored here at [`schema/card-set.schema.json`](./schema/card-set.schema.json)).
+[schemas/card-set.schema.json](https://github.com/letsbuilda/mundane/blob/main/schemas/card-set.schema.json).
+This repo validates against that canonical schema directly — there is no vendored copy.
 
 ### Effects are names, not code
 
@@ -80,7 +80,7 @@ PRs are the curation and moderation layer — there is no registry service. To a
 2. Make sure it validates locally:
 
    ```sh
-   uvx check-jsonschema --schemafile schema/card-set.schema.json sets/*.json
+   uvx check-jsonschema --schemafile https://raw.githubusercontent.com/letsbuilda/mundane/main/schemas/card-set.schema.json sets/*.json
    python scripts/check_unique_ids.py
    ```
 
@@ -92,8 +92,8 @@ against [`mundane-backend`](https://github.com/letsbuilda/mundane-backend) first
 
 ## Continuous integration
 
-[`ci.yaml`](./.github/workflows/ci.yaml) validates every file in `sets/` against the vendored schema
-and checks composed-id uniqueness on every push and pull request.
+[`ci.yaml`](./.github/workflows/ci.yaml) validates every file in `sets/` against the canonical schema
+in the meta repo and checks composed-id uniqueness on every push and pull request.
 
 ## License
 
