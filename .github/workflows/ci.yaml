@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.14"
+
+      # The schema is pinned by vendoring `schema/card-set.schema.json` (a copy of the meta repo's
+      # `schema-v1`), so unrelated changes on the schema's `main` never break this job.
+      - name: Validate every set against the schema
+        run: uvx check-jsonschema --schemafile schema/card-set.schema.json sets/*.json
+
+      - name: Check composed-id uniqueness across sets
+        run: python scripts/check_unique_ids.py
